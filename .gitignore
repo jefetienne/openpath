@@ -1,3 +1,6 @@
 *.swp
-Library/*
-Temp/*
+*.db
+OpenPath/Library/
+OpenPath/Temp/
+OpenPath/Logs/
+obj/
