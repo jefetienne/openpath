@@ -262,6 +262,10 @@ class OPPathFinder : MonoBehaviour {
 					currentNode++;
 				}
 
+				// If we want real-time A* updates we should reset this
+				if (currentNode >= nodes.Length)
+					return;
+
 				if ( autoChase ) {
 					transform.LookAt ( ( nodes[currentNode] as OPNode ).position );
 					
