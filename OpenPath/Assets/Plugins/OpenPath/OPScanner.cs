@@ -77,9 +77,7 @@ public class OPScanner : MonoBehaviour {
 	}
 	
 	void Start () {
-		if ( scanOnEnable ) {
-			Scan ();
-		}
+
 	}
 	
 	public IEnumerator FindPath ( Vector3 start, Vector3 goal, List< OPNode > list ) {
@@ -134,6 +132,10 @@ public class OPScanner : MonoBehaviour {
 	
 	public void Awake () {
 		instance = this;
+		if (scanOnEnable)
+		{
+			Scan();
+		}
 	}
 
 	public OPNode GetClosestNode ( Vector3 pos ) {
