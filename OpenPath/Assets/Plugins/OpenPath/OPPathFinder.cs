@@ -22,6 +22,9 @@ class OPPathFinder : MonoBehaviour
 	private float updateTimer = 0;
 	private CharacterController controller;
 
+	private Vector3 targetPosition;
+	private OPNode goalNode;
+	
 	public bool atEndOfPath
 	{
 		get
@@ -242,15 +245,22 @@ class OPPathFinder : MonoBehaviour
 
 	public void SetGoal(Vector3 v)
 	{
-		SetGoal(v, false);
+		SetGoal(v, true);
 	}
 
 	public void SetGoal(Vector3 v, bool persist)
 	{
 		if (goal == v)
-		{ return; }
+			return;
+
+		var gNode = scanner.GetClosestNode(v);
+
+		if (gNode == goalNode)
+			return;
 
 		goal = v;
+		goalNode = gNode;
+
 		UpdatePosition(persist);
 	}
 
@@ -309,7 +319,7 @@ class OPPathFinder : MonoBehaviour
 	public void UpdatePosition(bool persist)
 	{
 		if (!scanner)
-		{ return; }
+			return;
 
 		StartCoroutine(UpdatePositionRoutine(persist));
 	}
@@ -323,6 +333,11 @@ class OPPathFinder : MonoBehaviour
 
 		if (scanner)
 		{
+			if (target && autoChase && target.position != targetPosition)
+			{
+				targetPosition = target.position;
+				SetGoal(target);
+			}
 			// If there are nodes to follow		
 			if (nodes != null && nodes.Length > 0 && currentNode < nodes.Length)
 			{
