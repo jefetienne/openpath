@@ -10,7 +10,7 @@ public class OPAStar {
 			
 	// Find a path and return a list of each step
 	public IEnumerator Search ( OPNode start, OPNode goal, OPMap map, float heuristicWeight, List< OPNode > list, int maxCycles ) {
-		Debug.Log(start.ToString() + ", " + goal.ToString());
+		Debug.Log(start.position + ", " + goal.position);
         
         if ( start != null && goal != null ) {
             // Add the starting node to the open list
@@ -29,7 +29,7 @@ public class OPAStar {
                 
                 // Current node = node from the open list with the lowest cost
                 currentNode = openList.Front();
-                
+
                 if ( currentNode == goal ) {
                     break;
                 }
@@ -42,7 +42,7 @@ public class OPAStar {
                     OPNode endNode = (OPNode) neighbors[nIndex];
                     float incrementalCost = GetCost ( currentNode, endNode );
                     float endNodeCost = currentNode.costSoFar + incrementalCost;
-                    
+
                     // If the node is closed we may have to skip or remove it from the closed list.
                     if ( closedList.Contains ( endNode ) ) {
                         // If we didn't find a shorter route, skip.
