@@ -1,23 +1,28 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor ( typeof(OPScanner) )]
-public class OPInspector : Editor {
-	override public void OnInspectorGUI () {
+[CustomEditor(typeof(OPScanner))]
+public class OPInspector : Editor
+{
+	override public void OnInspectorGUI()
+	{
 		OPScanner scanner = (OPScanner)target;
 
-		if ( !scanner ) { return; }
+		if (!scanner)
+		{ return; }
 
-		DrawDefaultInspector ();
+		DrawDefaultInspector();
 
-		EditorGUILayout.Space  ();
+		EditorGUILayout.Space();
 
-		if ( GUILayout.Button ( "Scan", GUILayout.Height(30) ) ) {
-			scanner.Scan ();
+		if (GUILayout.Button("Scan", GUILayout.Height(30)))
+		{
+			scanner.Scan();
 		}
-		
-		if ( GUILayout.Button ( "Clear", GUILayout.Height(20) ) ) {
-			scanner.Clear ();
+
+		if (GUILayout.Button("Clear", GUILayout.Height(20)))
+		{
+			scanner.Clear();
 		}
 	}
 }
