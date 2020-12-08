@@ -13,6 +13,7 @@ public class OPNode : IComparable
 	public OPNode parent;
 	public bool active = false;
 	public List<OPNode> neighbors = new List<OPNode>();
+	public bool selected = false;
 
 	public OPNode()
 	{
@@ -39,6 +40,20 @@ public class OPNode : IComparable
 		estimatedTotalCost = 0.0f;
 		costSoFar = 1.0f;
 		parent = null;
+	}
+
+	public static void MakeNeighbors(OPNode a, OPNode b)
+	{
+		if (a == b)
+			return;
+
+		if (!a.neighbors.Contains(b))
+			a.neighbors.Add(b);
+
+		if (!b.neighbors.Contains(a))
+		{
+			b.neighbors.Add(a);
+		}
 	}
 
 	public int CompareTo(System.Object obj)

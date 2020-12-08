@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class OPNavMesh : MonoBehaviour
 {
-	private class Triangle
+	public class Triangle
 	{
 		public int[] indices;
 
@@ -17,7 +17,7 @@ public class OPNavMesh : MonoBehaviour
 			indices[2] = v2;
 		}
 
-		private bool IsNeighborTo(Triangle t, Vector3[] vertices)
+		private bool IsNeighborTo(Triangle t, IList<Vector3> vertices)
 		{
 			int similarVertices = 0;
 
@@ -35,11 +35,11 @@ public class OPNavMesh : MonoBehaviour
 			return similarVertices > 1;
 		}
 
-		public List<int> GetNeighbors(Triangle[] triangles, Vector3[] vertices)
+		public List<int> GetNeighbors(IList<Triangle> triangles, IList<Vector3> vertices)
 		{
 			List<int> tempList = new List<int>();
 
-			for (int i = 0; i < triangles.Length; i++)
+			for (int i = 0; i < triangles.Count; i++)
 			{
 				if (IsNeighborTo(triangles[i], vertices))
 				{
@@ -115,20 +115,6 @@ public class OPNavMesh : MonoBehaviour
 		}
 	}*/
 
-	private void MakeNeighbors(OPNode a, OPNode b)
-	{
-		if (a == b)
-			return;
-
-		if (!a.neighbors.Contains(b))
-			a.neighbors.Add(b);
-
-		if (!b.neighbors.Contains(a))
-		{
-			b.neighbors.Add(a);
-		}
-	}
-
 	public OPNode[] GetNodes()
 	{
 		Mesh mesh = this.GetComponent<MeshFilter>().sharedMesh;
@@ -166,7 +152,7 @@ public class OPNavMesh : MonoBehaviour
 			var gn = triangleArray[i].GetNeighbors(triangleArray, vertices);
 			for (nb = 0; nb < gn.Count; nb++)
 			{
-				MakeNeighbors(allNodes[i], allNodes[gn[nb]]);
+				OPNode.MakeNeighbors(allNodes[i], allNodes[gn[nb]]);
 			}
 		}
 

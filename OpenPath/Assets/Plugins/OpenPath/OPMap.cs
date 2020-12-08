@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using static OPNavMesh;
 
 public enum OPMapType
 {
@@ -56,16 +57,83 @@ public class OPMap
 [System.Serializable]
 public class OPNavMeshMap : OPMap
 {
-	public OPNavMeshMap(OPNavMesh navMesh)
+	public OPNavMeshMap(OPNavMesh navMesh) : this(new OPNavMesh[] { navMesh }) { }
+
+	public OPNavMeshMap(OPNavMesh[] navMeshes)
 	{
-		if (navMesh == null)
+		if (navMeshes == null || navMeshes.Length < 1)
 		{
 			Debug.LogError("OPMap | No active NavMesh in scene!");
 		}
 		else
 		{
-			nodes = navMesh.GetNodes();
+			if (navMeshes.Length == 1)
+				nodes = navMeshes[0].GetNodes();
+			else
+			{
+				nodes = GetNodes(navMeshes);
+				/*List<OPNode> nodeList = new List<OPNode>();
+
+				foreach (var nm in navMeshes)
+				{
+					nodeList.AddRange(nm.GetNodes());
+				}
+
+				nodes = nodeList.ToArray();*/
+			}
 		}
+	}
+
+	public OPNode[] GetNodes(OPNavMesh[] navMeshes)
+	{
+		List<Triangle> combinedTriangles = new List<Triangle>();
+		List<Vector3> combinedVertices = new List<Vector3>();
+		List<OPNode> combinedNodes = new List<OPNode>();
+
+		foreach(var navMesh in navMeshes)
+		{
+			Mesh mesh = navMesh.GetComponent<MeshFilter>().sharedMesh;
+
+			// Create triangles
+			for (int i = 0; i < mesh.triangles.Length; i += 3)
+			{
+				Triangle triangle = new Triangle(
+					mesh.triangles[i],
+					mesh.triangles[i + 1],
+					mesh.triangles[i + 2]
+				);
+
+				combinedTriangles.Add(triangle);
+
+				// Create median node
+				OPNode mn = new OPNode();
+				mn.position = navMesh.transform.TransformPoint(triangle.GetMedianPoint(mesh));
+
+				// Add median node to list
+				combinedNodes.Add(mn);
+			}
+
+			combinedVertices.AddRange(mesh.vertices);
+		}
+
+		// Connect median nodes
+		for (int i = 0; i < combinedTriangles.Count; i++)
+		{
+			var gn = combinedTriangles[i].GetNeighbors(combinedTriangles, combinedVertices);
+			for (int nb = 0; nb < gn.Count; nb++)
+			{
+				OPNode.MakeNeighbors(combinedNodes[i], combinedNodes[gn[nb]]);
+			}
+		}
+
+		for (int i = 0; i < combinedNodes.Count; i++)
+		{
+			Debug.Log(combinedNodes[i].neighbors.Count);
+		}
+
+
+		// Return
+		return combinedNodes.ToArray();
 	}
 }
 

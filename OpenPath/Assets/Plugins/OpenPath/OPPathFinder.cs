@@ -234,7 +234,6 @@ class OPPathFinder : MonoBehaviour
 		if (t)
 		{
 			SetGoal(t.position);
-
 		}
 		else
 		{
@@ -255,7 +254,9 @@ class OPPathFinder : MonoBehaviour
 
 		var gNode = scanner.GetClosestNode(v);
 
-		if (gNode == goalNode)
+		Debug.Log("GNODE: " + gNode.position);
+
+		if (gNode == goalNode && scanner.searching)
 			return;
 
 		goal = v;
@@ -320,6 +321,8 @@ class OPPathFinder : MonoBehaviour
 	{
 		if (!scanner)
 			return;
+
+		Debug.Log(5);
 
 		StartCoroutine(UpdatePositionRoutine(persist));
 	}

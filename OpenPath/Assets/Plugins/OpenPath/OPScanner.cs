@@ -56,10 +56,7 @@ public class OPScanner : MonoBehaviour
 		}
 		else if (mapType == OPMapType.NavMesh)
 		{
-			OPNavMesh navMesh = (OPNavMesh)GameObject.FindObjectOfType(typeof(OPNavMesh));
-
-			map = new OPNavMeshMap(navMesh);
-
+			map = new OPNavMeshMap((OPNavMesh[])GameObject.FindObjectsOfType(typeof(OPNavMesh)));
 		}
 		else
 		{
@@ -140,6 +137,9 @@ public class OPScanner : MonoBehaviour
 			{ Gizmos.color = Color.green; }
 			if (n.neighbors.Count < 1)
 			{ Gizmos.color = Color.red; }
+
+			if (n.selected)
+				Gizmos.color = Color.yellow;
 
 			Gizmos.DrawCube(n.position, new Vector3(0.25f, 0.25f, 0.25f));
 

@@ -34,6 +34,9 @@ public class OPAStar
                 // Current node = node from the open list with the lowest cost
                 currentNode = openList.Front();
 
+                Debug.Log(currentNode.position);
+                currentNode.selected = true;
+
                 if (currentNode == goal)
                 {
                     break;
@@ -143,6 +146,7 @@ public class OPAStar
 
         // Reverse it
         list.Reverse();
+        Debug.Log("got path " + list.Count);
     }
 
     // Get straight line distance between two points
